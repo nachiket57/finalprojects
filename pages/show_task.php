@@ -1,34 +1,43 @@
-<!doctype html>
+<?php include 'header.php'; ?>
 
-<html lang="en">
-<head>
-    <meta charset="utf-8">
+<article>
 
-    <title>The HTML5 Herald</title>
-    <meta name="description" content="The HTML5 Herald">
-    <meta name="author" content="SitePoint">
 
-    <link rel="stylesheet" href="css/styles.css?v=1.0">
+<?php  $array = get_object_vars($data);
+$string ='index.php?page=tasks&action=test&id='; $string .= $array['id']; ?>
 
-    <!--[if lt IE 9]>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
-    <![endif]-->
-</head>
-
-<body>
-
-<?php
-//this is how you print something  $data contains the record that was selected on the table.
-
-print_r($data);
-?>
-<form action="index.php?page=tasks&action=delete&id=<?php echo $data->id; ?> " method="post" id="form1">
-    <button type="submit" form="form1" value="delete">Delete</button>
-</form>
+<form action="<?php echo $string?>" method="POST" name="form">
 
 
 
+    <div class="container">
+        <h1>Show Task</h1>
 
-<script src="js/scripts.js"></script>
-</body>
-</html>
+        <label><b>createddate</b></label>
+        <input type="text" value="<?php echo $array['createddate']?>" name="createddate" readonly>
+
+        <br>
+
+        <label><b>duedate</b></label>
+        <input type="text" value="<?php echo $array['duedate'] ?>" name="duedate" readonly>
+
+        <br>
+
+        <label><b>message</b></label>
+        <textarea name="message" cols="50" rows="5" readonly><?php echo $array['message']?> </textarea>
+
+        <br>
+
+        <label><b>isdone</b></label>
+        <input type="text" value="<?php echo $array['isdone']?>" name="isdone" readonly>
+
+        <br>
+
+        <input type="submit" name="btSubmit" value="Edit">
+        <input type="submit" name="btSubmit" value="Delete">
+
+</article>
+
+
+        <?php include 'footer.php'; ?>
+
