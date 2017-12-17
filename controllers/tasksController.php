@@ -14,6 +14,7 @@ class tasksController extends http\controller
     //to call the show function the url is index.php?page=task&action=show
     public static function show()
     {
+        session_start();
         $record = todos::findOne($_REQUEST['id']);
         self::getTemplate('show_task', $record);
     }
@@ -22,19 +23,19 @@ class tasksController extends http\controller
 
     public static function all()
     {
-        $records = todos::findAll();
-        /*session_start();
-           if(key_exists('userID',$_SESSION)) {
-               $userID = $_SESSION['userID'];
-           } else {
+        session_start();
 
-               echo 'you must be logged in to view tasks';
-           }
-        $userID = $_SESSION['userID'];
+        $result = todos::findTasksbyID($_SESSION["userID"]);
 
-        $records = todos::findTasksbyID($userID);
-        */
-        self::getTemplate('all_tasks', $records);
+        if($result==true) {
+
+            self::getTemplate('all_tasks', $result);
+        }
+        else
+        {
+            self::getTemplate('create_task');
+        }
+
 
     }
     //to call the show function the url is called with a post to: index.php?page=task&action=create
@@ -44,13 +45,22 @@ class tasksController extends http\controller
 
     public static function create()
     {
-        print_r($_POST);
+        session_start();
+
+        self::getTemplate('create_task');
+
+
     }
 
     //this is the function to view edit record form
     public static function edit()
     {
+        session_start();
         $record = todos::findOne($_REQUEST['id']);
+
+        $result1 = get_object_vars($record);
+        unset($result1['oweneremail']);
+        unset($result1['ownerid']);
 
         self::getTemplate('edit_task', $record);
 
@@ -59,22 +69,31 @@ class tasksController extends http\controller
     //this would be for the post for sending the task edit form
     public static function store()
     {
+        session_start();
 
+        $record = new todo();
+        $record->createddate = $_POST['createddate'];
+        $record->duedate = $_POST['duedate'];
+        $record->message = $_POST['message'];
+        $record->isdone = $_POST['isdone'];
+        $record->ownerid = $_SESSION['userID'];
+       $record->owneremail = $_SESSION['email'];
 
-        $record = todos::findOne($_REQUEST['id']);
-        $record->body = $_REQUEST['body'];
         $record->save();
-        print_r($_POST);
-
+        header("Location: https://web.njit.edu/~nmd33/mvc/index.php?page=tasks&action=all");
     }
 
-    public static function save() {
-        session_start();
-        $task = new todo();
+    static  public function test()
+    {
+        if ($_POST['btSubmit']=='Edit') {
 
-        $task->body = $_POST['body'];
-        $task->ownerid = $_SESSION['userID'];
-        $task->save();
+            tasksController::edit();
+
+        }
+        elseif ($_POST['btSubmit']=='Delete') {
+
+            tasksController::delete();
+        }
 
     }
 
@@ -84,7 +103,35 @@ class tasksController extends http\controller
     {
         $record = todos::findOne($_REQUEST['id']);
         $record->delete();
-        print_r($_POST);
+        header("Location: https://web.njit.edu/~nmd33/mvc/index.php?page=tasks&action=all");
+       // print_r($_POST);
+
+    }
+    static public function update()
+    {
+        $record = new todo();
+        $record->createddate = $_POST['createddate'];
+        $record->duedate = $_POST['duedate'];
+        $record->message = $_POST['message'];
+        $record->isdone = $_POST['isdone'];
+        $record->id = $_REQUEST['id'];
+        $record->save();
+        header("Location: https://web.njit.edu/~nmd33/mvc/index.php?page=tasks&action=all");
+
+
+    }
+
+    static public function logout()
+    {
+        // remove all session variables
+        session_unset();
+
+        // destroy the session
+        session_destroy();
+
+        header("Location:  https://web.njit.edu/~nmd33/mvc/");
+
+
 
     }
 
