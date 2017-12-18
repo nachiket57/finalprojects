@@ -9,6 +9,7 @@ $string ='index.php?page=tasks&action=test&id='; $string .= $array['id']; ?>
 <form action="<?php echo $string?>" method="POST" name="form">
 
 
+    
 
     <div class="container">
         <h1>Show Task</h1>
