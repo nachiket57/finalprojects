@@ -15,6 +15,8 @@
     <![endif]-->
 </head>
 
+    
+    
 <body>
 <?php $array = get_object_vars($data); //print_r($array);
 $string ='index.php?page=accounts&action=test&id='; $string .= $array['id']; ?>
