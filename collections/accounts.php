@@ -11,6 +11,7 @@ class accounts extends \database\collection
 
     }
 
+    
 
     public static function findUserbyemail($email)
     {
